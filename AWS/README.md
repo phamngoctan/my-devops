@@ -70,12 +70,28 @@
         - Access key (access to API)
         - Password (AWS management console)
 - Amazon virtual private cloud (VPC) HERE
-    - 
-- Security groups and network ACLs
-- AWS public and private services
+    - VPC is a logically isolated portion of the AWS cloud within a region
+    - Public subnet, private subnet
+    - Virtual servers into a VPC subnet
+    - Between subnets, router is used for config the requests to local VPC or to the internet gateway
+    - Internet gateway is used to connect to the Internet
+- Security groups and network access control lists (NACLs)
+    - Security groups apply at instance level (example: EC2 instance - virtual server)
+    - Network ACL applies at subnet level (in - out from the subnet)
+    - Stateful (Security groups) and stateless firewalls (Network ACLs)
+- AWS public and private services (good one)
+    - Services that have public endpoints/IP addresses
+    - Services that have public IP addresses but exist within the VPC
 - Install the AWS command line interface
 
 ## Amazon elastic compute cloud (EC2)
 
+- EC2 overview
+    - NAT stands for Network Address Translation
+    - Instances in the public subnet are allowed to communicate with Internet by default
+    - Instances in the private subnet are not allowed to go outside the VPC
+    - To connect outside, we need to impl NAT gateway in the public subnet, then set the rule for outbound request to the nat-gateway-id to go to the Internet :) Good to know this
+- EC2 instance
+    - 5 machine types
 
 
