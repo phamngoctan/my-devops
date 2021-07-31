@@ -1,33 +1,29 @@
 # mongodb on Kubernetes setup
+Check the official page here https://github.com/mongodb/mongodb-kubernetes-operator
+
+Just playaround with the deployment of MongoDB on Kubernetes.
+
+Works:
+
+- Can execute to insert/update/delete documents in Mongodb.
+- Can scale up/down the number of Mongodb instances.
+- Delete the MongoDB Community Kubernetes Operator would not clean up the PV/Gcloud Disks.
+- Delete the Kubernetes namespaces can clean up everything.
+
+Some open points:
+
+- How to do the manually backup? Is it possible with the MongoDB Community Kubernetes Operator?
+- How to increase the persistent volume size (current: the data volume is set to 10Gb, log volume is 2Gb)?
 
 ## Using MongoDB Community Kubernetes Operator
 
 ```
-git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
-
 # Run the following command to create cluster-wide roles and role-bindings
-kubectl apply -f deploy/clusterwide
-
-# Install the necessary roles and role-bindings
-kubectl apply -k config/rbac
-
-
-# Install the Custom Resource Definitions
-kubectl apply -f config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
-kubectl get crd/mongodbcommunity.mongodbcommunity.mongodb.com
-
-# Verify that the resources have been created
-kubectl get role mongodb-kubernetes-operator
-
-kubectl get rolebinding mongodb-kubernetes-operator
-
-kubectl get serviceaccount mongodb-kubernetes-operator
-
-# Install Operator
-
-kubectl create -f config/manager/manager.yaml
-kubectl get pods
-
+kubectl apply -f 0_dev_namespace.yaml
+kubectl -n dev apply -f 1_mongodbcommunity.mongodb.com_mongodbcommunity.yaml
+kubectl -n dev apply -f 2_rbac/
+kubectl -n dev apply -f 3_manager.yaml
+kubectl -n dev apply -f 4_mongodb.com_v1_mongodbcommunity_cr.yaml
 ```
 
 
@@ -41,13 +37,25 @@ kubectl apply -f config/samples/mongodb.com_v1_mongodbcommunity_cr.yaml
 ### Rollback all
 
 ```
-kubectl delete -f config/samples/mongodb.com_v1_mongodbcommunity_cr.yaml
-kubectl delete -f config/manager/manager.yaml
-kubectl delete -f config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
-kubectl delete -k config/rbac
-kubectl delete -f deploy/clusterwide
-
+kubectl delete namespaces dev
 ```
 
-## Using MongoDB Community Kubernetes Operator
+### Mongodb console:
 
+```
+mongo admin -u mongoadmin
+
+enter your password
+
+db.inventory.insertOne(
+   { item: "canvas", qty: 100, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
+)
+
+db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], size: { h: 14, w: 21, uom: "cm" } },
+   { item: "mat", qty: 85, tags: ["gray"], size: { h: 27.9, w: 35.5, uom: "cm" } },
+   { item: "mousepad", qty: 25, tags: ["gel", "blue"], size: { h: 19, w: 22.85, uom: "cm" } }
+])
+
+db.inventory.find( {} )
+```
