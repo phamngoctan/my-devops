@@ -3,6 +3,11 @@ Check the official page here https://github.com/mongodb/mongodb-kubernetes-opera
 
 Just playaround with the deployment of MongoDB on Kubernetes.
 
+Prerequisites:
+
+- GCP environment is ready
+- GKE - Google Kubernetes Engine cluster is ready
+
 Works:
 
 - Can execute to insert/update/delete documents in Mongodb.
