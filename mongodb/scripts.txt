@@ -1,0 +1,16 @@
+kubectl apply -f config/samples/mongodb.com_v1_mongodbcommunity_cr.yaml --namespace dev
+
+kubectl get secret example-mongodb-admin-my-user --namespace dev -o json | jq -r '.data | with_entries(.value |= @base64d)'
+
+
+
+kubectl get secret example-mongodb-config --namespace dev -o json | jq -r '.data | with_entries(.value |= @base64d)'
+
+kubectl -n dev exec example-mongodb-0 -- /bin/bash
+mongosh "mongodb+srv://my-user:admin@example-mongodb-0.example-mongodb-svc.dev.svc.cluster.local/admin?ssl=true"
+kubectl -n dev exec --stdin --tty example-mongodb-0 -- /bin/bash
+
+kubectl describe pods -n dev example-mongodb-0
+
+
+kubectl apply -f config/samples/mongodb.com_v1_mongodbcommunity_cr.yaml --namespace dev
